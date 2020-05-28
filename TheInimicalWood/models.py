@@ -59,7 +59,6 @@ class Item(models.Model):
     bonus_mana = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
     bonus_stamina = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
     picture = models.URLField(unique=False, blank=True, null=True)
-    belongs_to_hero = models.ManyToManyField(Character)
     bonus_current_hp = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
     bonus_current_mana = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
     bonus_current_stamina = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
