@@ -1,13 +1,13 @@
 from django.urls import path
-from. views import home, game, create_character, overview, specialthanks, delete_character
+from. views import home, game, create_character, Overview, specialthanks, delete_character, Shop
 
 
 urlpatterns = [
     path('', home, name='home'),
     path('game/', game, name='game'),
     path('create_character/', create_character, name='create_character'),
-    path('overview/<int:id>', overview, name='overview'),
+    path('overview/<int:id>', Overview.as_view(), name='overview'),
     path('specialthanks/', specialthanks, name='specialthanks'),
-    path('delete/<int:id>', delete_character, name='delete')
-
+    path('delete/<int:id>', delete_character, name='delete'),
+    path('shop/<int:id>', Shop.as_view(), name='shop')
 ]

@@ -1,0 +1,233 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+{% block  title %}Shop In Inimical Wood{% endblock %}
+{% block content %}
+{% if character.belongs_to == request.user %}
+
+<br>
+<a href="{% url 'overview' character.id %}" class="btn btn-danger" style="width: 100px; margin-left: 98px">Back</a>
+<br>
+<div class="container" >
+  <div class="row" >
+    <div class="col-sm" >
+        <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+        <div class="card-body">
+          <h4>Welcome to the Shop In Inimical Wood. What do you need?</h4><br>
+            <div class="container">
+                <h4 style="color: #9ec8d6"><b><i class="fas fa-angle-right"></i> Weapons:</b></h4>
+                <div class="row justify-content">
+              {% for item in weapons %}
+              {% if loop.index in loop_index_raw %}
+                <div class="row" >
+              {% endif %}
+                  <div class="col-4" style="margin-top: 7px">
+                      {{ item.name }}<br>
+                        <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
+                                   height="64" width="64" style="border: 3px solid #9ec8d6;">
+                        <div style="position: absolute;
+                          bottom: 50px;
+                          width: 25px;
+                          right: 14px;
+                          font-size: 18px;
+                          color: white;
+                          background-color: #9ec8d6"><center>{{ quantity }}</center>
+                        </div><br>
+                            Price:
+                              {% if character.money >= item.price %}
+                                  <i><font color="white">{{ item.price }}</font></i>
+                              {% else %}
+                                 <i><font color="red">{{ item.price }}</font></i>
+                              {% endif %}
+                              {% if character.money >= item.price %}
+                          <form method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="badge badge-info" style="height: 25px; width: 4rem"
+                                    name="buy" value="{{ item.name }}">Buy
+                            </button>
+                          {% endif %}
+                          </form><br>
+                    </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      </div>
+        <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+                <div class="card-body">
+                    <div class="container">
+                        <h4 style="color: #9ec8d6"><b><i class="fas fa-angle-right"></i> Armors:</b></h4>
+                        <div class="row justify-content">
+                      {% for item in armors %}
+                      {% if loop.index in loop_index_raw %}
+                        <div class="row" >
+                      {% endif %}
+
+                          <div class="col-4" style="margin-top: 7px">
+                              {{ item.name }}<br>
+                                <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
+                                           height="64" width="64" style="border: 3px solid #9ec8d6;">
+                                <div style="position: absolute;
+                                  bottom: 50px;
+                                  width: 25px;
+                                  right: 14px;
+                                  font-size: 18px;
+                                  color: white;
+                                  background-color: #9ec8d6"><center>{{ quantity }}</center>
+                                </div><br>
+                                    Price:
+                                      {% if character.money >= item.price %}
+                                          <i><font color="white">{{ item.price }}</font></i>
+                                      {% else %}
+                                         <i><font color="red">{{ item.price }}</font></i>
+                                      {% endif %}
+                                      {% if character.money >= item.price %}
+                                  <form method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="badge badge-info" style="height: 25px; width: 4rem"
+                                            name="buy" value="{{ item.name }}">Buy
+                                    </button>
+                                  {% endif %}
+                                  </form><br>
+                            </div>
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+                    <div class="card-body">
+                        <div class="container">
+                            <h4 style="color: #9ec8d6"><b><i class="fas fa-angle-right"></i> Helmets:</b></h4>
+                            <div class="row justify-content">
+                          {% for item in helmets %}
+                          {% if loop.index in loop_index_raw %}
+                            <div class="row" >
+                          {% endif %}
+
+                              <div class="col-4" style="margin-top: 7px">
+                                  {{ item.name }}<br>
+                                    <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
+                                               height="64" width="64" style="border: 3px solid #9ec8d6;">
+                                    <div style="position: absolute;
+                                      bottom: 50px;
+                                      width: 25px;
+                                      right: 14px;
+                                      font-size: 18px;
+                                      color: white;
+                                      background-color: #9ec8d6"><center>{{ quantity }}</center>
+                                    </div><br>
+                                        Price:
+                                          {% if character.money >= item.price %}
+                                              <i><font color="white">{{ item.price }}</font></i>
+                                          {% else %}
+                                             <i><font color="red">{{ item.price }}</font></i>
+                                          {% endif %}
+                                          {% if character.money >= item.price %}
+                                      <form method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="badge badge-info" style="height: 25px; width: 4rem"
+                                                name="buy" value="{{ item.name }}">Buy
+                                        </button>
+                                      {% endif %}
+                                      </form><br>
+                                </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+                    <div class="card-body">
+                        <div class="container">
+                            <h4 style="color: #9ec8d6"><b><i class="fas fa-angle-right"></i> Consumable:</b></h4>
+                            <div class="row justify-content">
+                          {% for item in consumable %}
+                          {% if loop.index in loop_index_raw %}
+                            <div class="row" >
+                          {% endif %}
+
+                              <div class="col-4" style="margin-top: 7px">
+                                  {{ item.name }}<br>
+                                    <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
+                                               height="64" width="64" style="border: 3px solid #9ec8d6;">
+                                    <div style="position: absolute;
+                                      bottom: 50px;
+                                      width: 25px;
+                                      right: 14px;
+                                      font-size: 18px;
+                                      color: white;
+                                      background-color: #9ec8d6"><center>{{ quantity }}</center>
+                                    </div><br>
+                                        Price:
+                                          {% if character.money >= item.price %}
+                                              <i><font color="white">{{ item.price }}</font></i>
+                                          {% else %}
+                                             <i><font color="red">{{ item.price }}</font></i>
+                                          {% endif %}
+                                          {% if character.money >= item.price %}
+                                      <form method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="badge badge-info" style="height: 25px; width: 4rem"
+                                                name="buy" value="{{ item.name }}">Buy
+                                        </button>
+                                      {% endif %}
+                                      </form><br>
+                                </div>
+                          {% endfor %}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              <div class="col-sm" >
+                <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+                    <div class="card-body">
+                        <p style="text-align: left; font-size: 22px;"><i class="fas fa-coins"></i><i style="color: gold"> Your money: {{ character.money }} coins</i></p>
+                    </div>
+                </div>
+                <div class="card text-white" style="width: 32rem;background-color: rgba(0, 0, 0, 0.85);">
+                    <div class="card-body">
+                      <h4>Your backpack</h4><br>
+                        <div class="container">
+                          <div class="row justify-content">
+
+                              {% for item, quantity in backpack.items %}
+                              {% if loop.index in loop_index_raw %}
+                                <div class="row" >
+                              {% endif %}
+                                  <div class="col-4" style="margin-top: 7px">
+                                    <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
+                                               height="64" width="64" style="border: 3px solid #9ec8d6;">
+                                    <div style="position: absolute;
+                                      bottom: 50px;
+                                      width: 25px;
+                                      right: 80px;
+                                      font-size: 18px;
+                                      color: white;
+                                      background-color: #9ec8d6"><center>{{ quantity }}</center>
+                                    </div><br>
+                                      <i>Price: <font color="green">{{ item.price }}</font></i>
+                                      <form method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="badge badge-danger" style="height: 20px; width: 4rem"
+                                                name="sell" value="{{ item.name }}" id="sell">Sell
+                                        </button>
+                                      </form>
+                                    </div>
+                              {% endfor %}
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+     </div>
+  </div>
+</div>
+
+{% endif %}
+{% endblock %}

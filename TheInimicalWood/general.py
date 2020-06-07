@@ -1,15 +1,12 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from .forms import RegisterForm, CharacterForm
-from .models import Character, Item
-from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404
+from .models import Item
 import smtplib
 import json
-#TODO: Delete imports
 
 
 def create_character_logic(hero):
     """
-    Creating character in database
+    Creating character in database used in views.py
     """
 
     # Creating inventory and backpack
@@ -84,18 +81,9 @@ def contact_logic(user_name, user_mail, user_subject, mail_body, account):
 
 
 class Overview:
-
-    @staticmethod
-    def sell(request, character, hero_backpack):
-        """
-        selling item
-        """
-        item_to_sell = get_object_or_404(Item, name=request.POST.get('sell'))
-        if hero_backpack[item_to_sell.name] > 0:
-            hero_backpack[item_to_sell.name] -= 1
-            character.backpack = json.dumps(hero_backpack)
-            character.money += item_to_sell.price
-            character.save()
+    """
+    Overview logic used in views.py
+    """
 
     @staticmethod
     def equip_item(request, character, hero_backpack, hero_inventory):
@@ -103,8 +91,8 @@ class Overview:
         Equip item - moving to the inventory
         """
         item_to_equip = get_object_or_404(Item, name=request.POST.get('equip'))
-        skin = ['Head', 'Body', 'Left', 'Right']
 
+        skin = ['Head', 'Body', 'Left', 'Right']
         if item_to_equip.category == 1 or item_to_equip.category == 2 or item_to_equip.category == 3:
             part = 'left'
         elif item_to_equip.category == 4 or item_to_equip.category == 5:
@@ -113,6 +101,8 @@ class Overview:
             part = 'head'
         else:
             part = 'right'
+
+        item_to_unequip = get_object_or_404(Item, name=hero_inventory[part])
 
         # changing quantities in backpack and inventory
         if hero_backpack[item_to_equip.name] > 0 and hero_inventory[part] != item_to_equip.name:
@@ -123,9 +113,16 @@ class Overview:
             character.backpack = json.dumps(hero_backpack)
             if item_to_equip.category != 7:
                 hero_inventory[part] = item_to_equip.name
+            character.inventory = json.dumps(hero_inventory)
+
+            # unequping item
+            character.attack_dmg -= item_to_unequip.bonus_attack_dmg
+            character.defence -= item_to_unequip.bonus_defence
+            character.hp -= item_to_unequip.bonus_hp
+            character.mana -= item_to_unequip.bonus_mana
+            character.stamina -= item_to_unequip.bonus_stamina
 
             # changing stats
-            character.inventory = json.dumps(hero_inventory)
             character.attack_dmg += item_to_equip.bonus_attack_dmg
             character.defence += item_to_equip.bonus_defence
             character.hp += item_to_equip.bonus_hp
@@ -188,3 +185,32 @@ class Overview:
         character.backpack = json.dumps(hero_backpack)
 
         character.save()
+
+class Shop:
+    """
+    Actions available in shop
+    """
+
+    @staticmethod
+    def sell(request, character, hero_backpack):
+        """
+        selling item
+        """
+        item_to_sell = get_object_or_404(Item, name=request.POST.get('sell'))
+        if hero_backpack[item_to_sell.name] > 0:
+            hero_backpack[item_to_sell.name] -= 1
+            character.backpack = json.dumps(hero_backpack)
+            character.money += item_to_sell.price
+            character.save()
+
+    @staticmethod
+    def buy(request, character, hero_backpack):
+        """
+        buying item
+        """
+        item_to_buy = get_object_or_404(Item, name=request.POST.get('buy'))
+        if character.money >= item_to_buy.price:
+            character.money -= item_to_buy.price * 1.5
+            hero_backpack[item_to_buy.name] += 1
+            character.backpack = json.dumps(hero_backpack)
+            character.save()

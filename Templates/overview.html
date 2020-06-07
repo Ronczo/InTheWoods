@@ -5,12 +5,13 @@
 {% if character.belongs_to == request.user %}
 <br>
 
-
 <div class="container" >
   <div class="row" >
     <div class="col-sm" >
       <div class="card text-white" style="width: 20rem;background-color: rgba(0, 0, 0, 0.85); margin-bottom: 30px">
         <div class="card-body" >
+          <a href="{% url 'game' %}" class="btn btn-danger" style="width: 100px;">Back</a>
+          <hr style="border-top: 2px solid #9ec8d6">
           <h4>Hero statistics:</h4>
           <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_bar_hp }}%" aria-valuenow="{{ character.current_hp }}" aria-valuemin="5" aria-valuemax="{{ character.hp }}"></div>
@@ -30,9 +31,13 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm">
+
       <div class="card text-white" style="width: 20rem;background-color: rgba(0, 0, 0, 0.85);">
         <div class="card-body ">
+          <a href="{% url 'game' %}" class="btn btn-success" style="display: block; margin-left: auto; margin-right: auto; width: 100px;">Mission</a>
+          <hr style="border-top: 2px solid #9ec8d6">
           <h4>Inventory</h4><br>
           <div class="container">
             <div class="row justify-content-md-center">
@@ -88,9 +93,12 @@
         </div>
       </div>
     </div>
+
     <div class="col-sm">
       <div class="card text-white" style="width: 20rem;background-color: rgba(0, 0, 0, 0.85);">
-        <div class="card-body ">
+        <div class="card-body">
+          <a href="{% url 'shop' character.id %}" class="btn btn-info" style="margin-left: 165px; width: 100px; color: white;">Shop</a>
+          <hr style="border-top: 2px solid #9ec8d6">
           <h4>Backpack</h4><br>
             <div class="container">
               <div class="row justify-content">
@@ -103,7 +111,7 @@
                     <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}"
                                height="64" width="64" style="border: 3px solid #9ec8d6;">
                     <div style="position: absolute;
-                      bottom: 50px;
+                      bottom: 25px;
                       width: 25px;
                       right: 14px;
                       font-size: 18px;
@@ -112,23 +120,21 @@
                     </div>
                       <form method="post">
                         {% csrf_token %}
-                        {% if item.name != "Arrows" %}
-                        <button type="submit" class="badge badge-info" style="height: 20px; width: 4rem"
-                                name="equip" value="{{ item.name }}" id="equip">
-                          {% if item.category == 7 %}
-                          Use
-                          {% else %}
-                          Equip
+                        {% if item.name != inventory.body.name and item.name != inventory.head.name and item.name != inventory.left.name and item.name != inventory.right.name %}
+
+
+                          <button type="submit" class="badge badge-info" style="height: 20px; width: 4rem"
+                                  name="equip" value="{{ item.name }}" id="equip">
+                            {% if item.name == "Arrows" %}
+                              Drop
+                            {% elif item.category == 7 %}
+                              Use
+                            {% else %}
+                              Equip
+                            {% endif %}
+                          </button>
                           {% endif %}
-                        </button>
-                      </form>
-                     {% endif %}
-                      <form method="post">
-                        {% csrf_token %}
-                        <button type="submit" class="badge badge-danger" style="height: 20px; width: 4rem"
-                                name="sell" value="{{ item.name }}" id="sell">Sell
-                        </button>
-                      </form>
+                    </form>
                 </div>
               {% endfor %}
             </div>

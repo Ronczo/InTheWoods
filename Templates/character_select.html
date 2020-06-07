@@ -5,14 +5,13 @@
 {% block content %}
 
 <br>
-<div class="row justify-content-md-center" style="margin-left: 180px;">
-    <div class="col-4">
+<div style="text-align: center;">
     {% if len_user_characters > 0 and len_user_characters < 3 %}
     <a href="{% url 'create_character' %}" class="btn btn-success">Create new Hero!</a>
     {% endif %}
+</div>
 
-    </div>
-</div>>
+
 <br>
 {% if user_characters %}
 <div class="container">
@@ -30,7 +29,7 @@
 <img src="http://www.ronczo.webd.pro/media/Sorcerer_avatar.jpg"  alt="Sorcerer_avatar" height="80" width="80">
 {% endif %}
   <div class="card-body">
-    <h5 class="card-title">{{ character.name }}</h5><hr>
+    <h5 class="card-title">{{ character.name }} </h5><hr>
     <p class="card-text">
         <h6 style="text-align: left">Hero details:</h6>
                 <p style="text-align: left">Attack damage: {{ character.attack_dmg }}<br>

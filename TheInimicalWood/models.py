@@ -24,6 +24,7 @@ class Character(models.Model):
     current_hp = models.PositiveSmallIntegerField(blank=False, null=False, default=100)
     current_mana = models.PositiveSmallIntegerField(blank=False, null=False, default=50)
     current_stamina = models.PositiveSmallIntegerField(blank=False, null=False, default=100)
+    mission = models.PositiveSmallIntegerField(blank=False, null=False, default=0)  # Last finished mission
 
 
     def __str__(self):
@@ -39,7 +40,7 @@ class Character(models.Model):
 
 class Item(models.Model):
     item_categories = [
-        (0, 'Others'),
+        (0, 'Body'),
         (1, 'Sword'),
         (2, 'Bow'),
         (3, 'Wand'),

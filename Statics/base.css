@@ -35,12 +35,17 @@ body {
 
 #play {
     a:hover box-shadow: inset 300px 0 0 #e06666;
-    transition: all 1s;
+    transition: all 2s;
     color: #fff;
     padding: 10px;
     position: absolute;
     top: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+hr.overview {
+    border-top: 1px;
+    solid #9ec8d6;
 }
 
