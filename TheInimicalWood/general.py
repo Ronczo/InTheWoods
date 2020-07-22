@@ -44,10 +44,12 @@ def create_character_logic(hero):
         hero.attack_dmg = 15
         hero.defence = 5
         hero.stamina = 150
+        hero.current_stamina = 150
     elif hero.hero_class == 2:
         hero.attack_dmg = 5
         hero.defence = 5
         hero.mana = 100
+        hero.current_mana = 100
     hero.save()
 
     # for item in items:

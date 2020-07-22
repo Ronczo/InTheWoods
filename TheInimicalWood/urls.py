@@ -1,5 +1,5 @@
 from django.urls import path
-from. views import home, game, create_character, Overview, specialthanks, delete_character, Shop
+from. views import home, game, create_character, Overview, specialthanks, delete_character, Shop, mission_select, briefing
 
 
 urlpatterns = [
@@ -9,5 +9,7 @@ urlpatterns = [
     path('overview/<int:id>', Overview.as_view(), name='overview'),
     path('specialthanks/', specialthanks, name='specialthanks'),
     path('delete/<int:id>', delete_character, name='delete'),
-    path('shop/<int:id>', Shop.as_view(), name='shop')
+    path('shop/<int:id>', Shop.as_view(), name='shop'),
+    path('mission/<int:id>', mission_select, name="mission_select"),
+    path('briefing/<int:id>', briefing, name="briefing")
 ]

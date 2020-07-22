@@ -68,3 +68,13 @@ class Item(models.Model):
         return f"{self.name} - {Item.item_categories[self.category][1].upper()}" \
                f"   (Price: {str(self.price)}, AD: {str(self.bonus_attack_dmg)}, DEF: {str(self.bonus_defence)}" \
                f"HP: {str(self.bonus_hp)}, MANA: {str(self.bonus_mana)}, STAMINA: {str(self.bonus_stamina)}"
+
+
+class Mission(models.Model):
+    number = models.PositiveSmallIntegerField(default=0, blank=False, null=False)
+    picture = models.URLField(unique=True, blank=True, null=True)
+    description = models.TextField(blank=True, null=True)
+    story = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.number} - {self.description}"

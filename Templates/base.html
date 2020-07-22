@@ -12,8 +12,10 @@
           integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <script src="https://kit.fontawesome.com/40fca8b9cb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="{% static 'base.css' %}">
-
+    <link rel="stylesheet" href="{% static 'briefing.css' %}">
     <link rel="icon" href="http://www.ronczo.webd.pro/media/icon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Pirata+One&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
 </head>
 <body>
 <div class="sticky-top">
@@ -29,7 +31,7 @@
         </span>
 
 {% if user.is_authenticated %}
-        <span id="welcome"><i class="far fa-id-card" style="margin-right: 5px;"></i> Welcome {{ user.username }}
+        <span id="welcome"><i class="far fa-id-card" style="margin-right: 5px; margin-top: 4px;"></i> Welcome {{ user.username }}
             <a href="{% url 'logout' %}" class="btn btn-light" style="margin-left: 15px;">Logout</a></span>
 
 {% else %}

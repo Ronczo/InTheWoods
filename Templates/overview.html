@@ -36,7 +36,7 @@
 
       <div class="card text-white" style="width: 20rem;background-color: rgba(0, 0, 0, 0.85);">
         <div class="card-body ">
-          <a href="{% url 'game' %}" class="btn btn-success" style="display: block; margin-left: auto; margin-right: auto; width: 100px;">Mission</a>
+          <a href="{% url 'mission_select' character.id %}" class="btn btn-success" style="display: block; margin-left: auto; margin-right: auto; width: 100px;">Mission</a>
           <hr style="border-top: 2px solid #9ec8d6">
           <h4>Inventory</h4><br>
           <div class="container">
@@ -102,7 +102,6 @@
           <h4>Backpack</h4><br>
             <div class="container">
               <div class="row justify-content">
-
               {% for item, quantity in backpack.items %}
               {% if loop.index in loop_index_raw %}
                 <div class="row" >

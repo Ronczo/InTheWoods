@@ -1,11 +1,134 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from TheInimicalWood.forms import RegisterForm, CharacterForm
-from .models import Character, Item
+from .models import Character, Item, Mission
 from django.contrib.auth.decorators import login_required
 from django.views import View
 from . import general
 import json
-import operator
+
+
+class Overview(View):
+    """
+    character overview - basic stats, inventory, backpack
+    """
+    @staticmethod
+    def get(request, id):
+        character = get_object_or_404(Character, pk=id)
+        hero_backpack = json.loads(character.backpack)
+        hero_inventory = json.loads(character.inventory)
+
+        # Creating backpack from JSON string
+        backpack = {}
+        for item in hero_backpack:
+            if hero_backpack[item] > 0:
+                item_to_add = get_object_or_404(Item, name=item)
+                backpack[item_to_add] = hero_backpack[item]
+
+        # Creating inventory from JSON string
+        inventory = {}
+        for item in hero_inventory:
+            item_to_add_to_inventory = get_object_or_404(Item, name=hero_inventory[item])
+            inventory[item] = item_to_add_to_inventory
+
+        # Variables needed for template
+        loop_index_raw = [i for i in range(1000)][1::3]
+        progress_bar_hp = int(character.current_hp / character.hp * 100) if (
+                                    character.current_hp / character.hp * 100) >= 25 else 25
+        progress_bar_mana = int(character.current_mana / character.mana * 100) if (
+                                    character.current_mana / character.mana * 100) >= 25 else 25
+        progress_bar_stamina = int(character.current_stamina / character.stamina * 100) if (
+                                    character.current_stamina / character.stamina * 100) >= 25 else 25
+
+        context = {
+            'character': character,
+            'backpack': backpack,
+            'loop_index_raw': loop_index_raw,
+            'inventory': inventory,
+            'progress_bar_hp': progress_bar_hp,
+            'progress_bar_mana': progress_bar_mana,
+            'progress_bar_stamina': progress_bar_stamina
+        }
+
+        return render(request, 'overview.html', context)
+
+    @staticmethod
+    def post(request, id):
+        character = get_object_or_404(Character, pk=id)
+        hero_backpack = json.loads(character.backpack)
+        hero_inventory = json.loads(character.inventory)
+
+        if 'equip' in request.POST:
+            general.Overview.equip_item(request, character, hero_backpack, hero_inventory)
+            return redirect('overview', id=character.id)
+
+        if 'takeoff' in request.POST:
+            general.Overview.take_off_item(request, character, hero_backpack, hero_inventory)
+            return redirect('overview', id=character.id)
+
+
+class Shop(View):
+    """
+    Shop view - buying and selling items
+    """
+    @staticmethod
+    def get(request, id):
+        character = get_object_or_404(Character, pk=id)
+
+        # Creating backpack from JSON string
+        hero_backpack = json.loads(character.backpack)
+        backpack = {}
+        for item in hero_backpack:
+            if hero_backpack[item] > 0:
+                item_to_add = get_object_or_404(Item, name=item)
+                backpack[item_to_add] = hero_backpack[item]
+
+        # Preparing shop
+        all_items = Item.objects.all()
+        items_to_buy = []
+        weapons = []
+        armors = []
+        helmets = []
+        consumable = []
+
+        for item in all_items:
+            item.price = round(item.price * 1.5)
+            if item.category == 1 or item.category == 2 or item.category == 3:
+                weapons.append(item)
+            elif item.category == 4 or item.category == 5:
+                armors.append(item)
+            elif item.category == 6:
+                helmets.append(item)
+            elif item.category == 7:
+                consumable.append(item)
+            else:
+                continue
+
+        context = {
+            'character': character,
+            'items_to_buy': items_to_buy,
+            'backpack': backpack,
+            'weapons': weapons,
+            'armors': armors,
+            'helmets': helmets,
+            'consumable': consumable,
+        }
+
+        return render(request, 'shop.html', context)
+
+    @staticmethod
+    def post(request, id):
+        character = get_object_or_404(Character, pk=id)
+        hero_backpack = json.loads(character.backpack)
+
+        if 'sell' in request.POST:
+            general.Shop.sell(request, character, hero_backpack)
+            return redirect('shop', id=character.id)
+
+        if 'buy' in request.POST:
+            general.Shop.buy(request, character, hero_backpack)
+            return redirect('shop', id=character.id)
+
+        return render(request, 'shop.html')
 
 
 def home(request):
@@ -113,125 +236,28 @@ def specialthanks(request):
     return render(request, 'specialthanks.html')
 
 
-class Overview(View):
+def mission_select(request, id):
     """
-    character overview - basic stats, inventory, backpack
+    progress overview and choosing mission
     """
-    @staticmethod
-    def get(request, id):
-        character = get_object_or_404(Character, pk=id)
-        hero_backpack = json.loads(character.backpack)
-        hero_inventory = json.loads(character.inventory)
-
-        # Creating backpack from JSON string
-        backpack = {}
-        for item in hero_backpack:
-            if hero_backpack[item] > 0:
-                item_to_add = get_object_or_404(Item, name=item)
-                backpack[item_to_add] = hero_backpack[item]
-
-        # Creating inventory from JSON string
-        inventory = {}
-        for item in hero_inventory:
-            item_to_add_to_inventory = get_object_or_404(Item, name=hero_inventory[item])
-            inventory[item] = item_to_add_to_inventory
-
-        # Variables needed for template
-        loop_index_raw = [i for i in range(1000)][1::3]
-        progress_bar_hp = int(character.current_hp / character.hp * 100) if (
-                                    character.current_hp / character.hp * 100) >= 25 else 25
-        progress_bar_mana = int(character.current_mana / character.mana * 100) if (
-                                    character.current_mana / character.mana * 100) >= 25 else 25
-        progress_bar_stamina = int(character.current_stamina / character.stamina * 100) if (
-                                    character.current_stamina / character.stamina * 100) >= 25 else 25
-
-        context = {
-            'character': character,
-            'backpack': backpack,
-            'loop_index_raw': loop_index_raw,
-            'inventory': inventory,
-            'progress_bar_hp': progress_bar_hp,
-            'progress_bar_mana': progress_bar_mana,
-            'progress_bar_stamina': progress_bar_stamina
-        }
-
-        return render(request, 'overview.html', context)
-
-    @staticmethod
-    def post(request, id):
-        character = get_object_or_404(Character, pk=id)
-        hero_backpack = json.loads(character.backpack)
-        hero_inventory = json.loads(character.inventory)
-
-        if 'equip' in request.POST:
-            general.Overview.equip_item(request, character, hero_backpack, hero_inventory)
-            return redirect('overview', id=character.id)
-
-        if 'takeoff' in request.POST:
-            general.Overview.take_off_item(request, character, hero_backpack, hero_inventory)
-            return redirect('overview', id=character.id)
+    character = get_object_or_404(Character, pk=id)
+    missions = Mission.objects.all()
 
 
-class Shop(View):
-    """
-    Shop view - buying and selling items
-    """
-    @staticmethod
-    def get(request, id):
-        character = get_object_or_404(Character, pk=id)
+    context = {        'character': character,
+        'missions': missions
+    }
 
-        # Creating backpack from JSON string
-        hero_backpack = json.loads(character.backpack)
-        backpack = {}
-        for item in hero_backpack:
-            if hero_backpack[item] > 0:
-                item_to_add = get_object_or_404(Item, name=item)
-                backpack[item_to_add] = hero_backpack[item]
-
-        all_items = Item.objects.all()
-        items_to_buy = []
-        weapons = []
-        armors = []
-        helmets = []
-        consumable = []
-
-        for item in all_items:
-            item.price = round(item.price * 1.5)
-            if item.category == 1 or item.category == 2 or item.category == 3:
-                weapons.append(item)
-            elif item.category == 4 or item.category == 5:
-                armors.append(item)
-            elif item.category == 6:
-                helmets.append(item)
-            elif item.category == 7:
-                consumable.append(item)
-            else:
-                continue
+    return render(request, 'mission_select.html', context)
 
 
-        context = {
-            'character': character,
-            'items_to_buy': items_to_buy,
-            'backpack': backpack,
-            'weapons' : weapons,
-            'armors': armors,
-            'helmets': helmets,
-            'consumable': consumable,
-        }
+def briefing(request, id):
+    character = get_object_or_404(Character, pk=id)
+    missions = Mission.objects.all()
+    
+    context = {
+        'character': character,
+        'missions': missions
+    }
 
-        return render(request, 'shop.html', context)
-
-    @staticmethod
-    def post(request, id):
-        character = get_object_or_404(Character, pk=id)
-        hero_backpack = json.loads(character.backpack)
-
-        if 'sell' in request.POST:
-            general.Shop.sell(request, character, hero_backpack)
-            return redirect('shop', id=character.id)
-
-        if 'buy' in request.POST:
-            general.Shop.buy(request, character, hero_backpack)
-            return redirect('shop', id=character.id)
-
-        return render(request, 'shop.html')
+    return render(request, 'briefing.html', context)
