@@ -11,6 +11,7 @@ class Overview(View):
     """
     character overview - basic stats, inventory, backpack
     """
+
     @staticmethod
     def get(request, id):
         character = get_object_or_404(Character, pk=id)
@@ -33,11 +34,11 @@ class Overview(View):
         # Variables needed for template
         loop_index_raw = [i for i in range(1000)][1::3]
         progress_bar_hp = int(character.current_hp / character.hp * 100) if (
-                                    character.current_hp / character.hp * 100) >= 25 else 25
+                                                                                    character.current_hp / character.hp * 100) >= 25 else 25
         progress_bar_mana = int(character.current_mana / character.mana * 100) if (
-                                    character.current_mana / character.mana * 100) >= 25 else 25
+                                                                                          character.current_mana / character.mana * 100) >= 25 else 25
         progress_bar_stamina = int(character.current_stamina / character.stamina * 100) if (
-                                    character.current_stamina / character.stamina * 100) >= 25 else 25
+                                                                                                   character.current_stamina / character.stamina * 100) >= 25 else 25
 
         context = {
             'character': character,
@@ -70,6 +71,7 @@ class Shop(View):
     """
     Shop view - buying and selling items
     """
+
     @staticmethod
     def get(request, id):
         character = get_object_or_404(Character, pk=id)
@@ -243,21 +245,22 @@ def mission_select(request, id):
     character = get_object_or_404(Character, pk=id)
     missions = Mission.objects.all()
 
-
-    context = {        'character': character,
+    context = {
+        'character': character,
         'missions': missions
     }
 
     return render(request, 'mission_select.html', context)
 
 
-def briefing(request, id):
+def briefing(request, id, selected_mission):
     character = get_object_or_404(Character, pk=id)
-    missions = Mission.objects.all()
-    
+    current_mission = get_object_or_404(Mission, number=selected_mission)
+
     context = {
         'character': character,
-        'missions': missions
+        'current_mission': current_mission
     }
 
-    return render(request, 'briefing.html', context)
+    return render(request, 'missions/briefing-template.html', context)
+

@@ -37,7 +37,6 @@
                 HP: {{ character.hp }}<br>
                 Mana: {{ character.mana }}<br>
                 Stamina: {{ character.stamina }}</p>
-    </p>
     <a href="{% url 'overview' character.id %}" class="btn btn-success" style="width: 10rem;">Play this hero</a>
     <a href="{% url 'delete' character.id %}" class="btn btn-danger" style="width: 10rem;">Delete this hero</a>
   </div>
@@ -50,17 +49,14 @@
 
 
 {% else %}
-<div class="card card text-white bg-dark mb-3 ">
+    <div class="card card text-white bg-dark mb-3 ">
 
-  <div class="card-body">
-    <h5 class="card-title">Ops, you don't have any character</h5>
-    <p class="card-text">Click button below and create you first Hero in Inimical Wood!</p>
-    <a href="{% url 'create_character' %}" class="btn btn-success">Create Hero!</a>
-  </div>
+      <div class="card-body">
+        <h5 class="card-title">Ops, you don't have any character</h5>
+        <p class="card-text">Click button below and create you first Hero in Inimical Wood!</p>
+        <a href="{% url 'create_character' %}" class="btn btn-success">Create Hero!</a>
+      </div>
+    </div>
 </div>
 {% endif %}
-
-
-
-
 {% endblock %}
