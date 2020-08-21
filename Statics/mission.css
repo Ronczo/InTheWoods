@@ -1,0 +1,29 @@
+#container {
+    margin: 2% 3%;
+    position: relative;
+}
+
+#herostatus {
+    width: 25%;
+    height: 500px;
+    float: left
+}
+
+#actionmenu {
+    width: 40%;
+    height: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#monsterstatus {
+    width: 25%;
+    height: 500px;
+    float: right;
+}
+
+#herostatus, #actionmenu, #monsterstatus {
+    color: red;
+    border: solid 3px;
+    background-color: rgba(0, 0, 0, 0.85)
+}

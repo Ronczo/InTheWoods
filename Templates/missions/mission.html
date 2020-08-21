@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Mission {{ current_mission.number }} -    {% endblock %}
+
+{% block content %}
+{% if character.belongs_to == request.user %}
+
+<div id="container">
+    <div id="herostatus">
+HERO
+    </div>
+
+    <div id="monsterstatus">
+MONSTER
+    </div>
+
+<div id="actionmenu">
+ACTION
+    </div>
+</div>
+
+
+{% else %}
+<div class="alert alert-danger" role="alert">
+  You are trying to play character, which doesn't belong to you!
+</div>
+<div style="text-align: center;">
+  <a href="{% url 'game' %}" class="btn btn-danger" style="width: 100px;">Back</a>
+</div>
+{% endif %}
+{% endblock %}
+
