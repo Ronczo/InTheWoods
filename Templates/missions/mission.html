@@ -67,16 +67,29 @@
     <div id="actionmenu">
         <div id="actiontext">
             <div id="tothebottom">
-                asd
+                TUTAJ BĘDZIE TEKST O PRZEBIEGU WALKI  - {{ battle_course }}
             </div>
         </div>
         <div id="basicaction">
             <div id="attackbutton">
-                <a href="#" class="not-active">ATTACK</a>
+                <form method="post">
+                {% csrf_token %}
+                    <button type="submit" name="attack" value="1" id="attack">
+                        ATTACK
+                    </button>
+                </form>
             </div>
             <div id="defendbutton">
-                <a href="#" class="not-active">DEFEND</a>
+                <form method="post">
+                {% csrf_token %}
+                    <button type="submit" name="defend" value="1" id="defend">
+                        DEFEND
+                    </button>
+                </form>
             </div>
+        </div>
+        <div id="specialaction">
+            SPECIAL ATATCKS
         </div>
     </div>
 </div>

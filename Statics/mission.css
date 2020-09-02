@@ -110,6 +110,11 @@
     font-size: 22px;
 
 }
+#attack{
+    border: solid 0px;
+    background-color: red;
+    color: white;
+}
 
 #defendbutton {
     margin-left: 60%;
@@ -121,13 +126,10 @@
     font-family: 'Luckiest Guy', cursive;
     font-size: 22px;
 }
-
-a.not-active {
+#defend{
+    border: solid 0px;
+    background-color: blue;
     color: white;
-}
-
-a.not-active:hover {
-    text-decoration: none;
 }
 
 #actiontext {
@@ -148,3 +150,4 @@ a.not-active:hover {
     bottom: 0;
     padding: 10px;
 }
+

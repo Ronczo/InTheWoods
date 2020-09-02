@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.views import View
 from . import general
 import json
+from django.http import HttpResponse
 
 
 class Overview(View):
@@ -274,6 +275,7 @@ def mission(request,id, selected_mission):
     Fighting mechanics and info about character and monster
     """
 
+
     character = get_object_or_404(Character, pk=id)
     current_mission = get_object_or_404(Mission, number=selected_mission)
     monster = get_object_or_404(Monsters, number=selected_mission)
@@ -294,6 +296,14 @@ def mission(request,id, selected_mission):
     monster_progress_bar_mana = int(monster.current_mana / monster.max_mana * 100) if (
     monster.current_mana / monster.max_mana * 100) >= 25 else 25
 
+    #attach action
+    if 'attack' in request.POST:
+        monster.current_hp -= 1
+        monster.save()
+
+    if 'defend' in request.POST:
+        monster.current_hp += 1
+        monster.save()
 
     context = {
         'character': character,
@@ -304,7 +314,7 @@ def mission(request,id, selected_mission):
         'mission_number': selected_mission,
         'monster': monster,
         'monster_progress_bar_hp': monster_progress_bar_hp,
-        'monster_progress_bar_mana': monster_progress_bar_mana
+        'monster_progress_bar_mana': monster_progress_bar_mana,
     }
 
     return render(request, 'missions/mission.html', context)
