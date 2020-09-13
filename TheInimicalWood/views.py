@@ -307,6 +307,8 @@ def mission(request,id, selected_mission):
         combat.Defends.defend(id)
         return redirect('mission', id=character.id, selected_mission=selected_mission)
 
+
+
     context = {
         'character': character,
         'current_mission': current_mission,

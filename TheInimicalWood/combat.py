@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from random import random
 from .models import Character, Monsters
+from django.http import HttpResponse
 
 
 class Attacks:
@@ -24,6 +25,9 @@ class Attacks:
         else:
             monster.current_hp -= hit_dmg
 
+        character.current_stamina -= 10
+
+        character.save()
         monster.save()
 
 
@@ -40,4 +44,14 @@ class Defends:
         else:
             character.current_hp += 10
 
+        if character.stamina - character.current_stamina < 20:
+            character.current_stamina += character.stamina - character.current_stamina
+        else:
+            character.current_stamina += 20
+
         character.save()
+
+
+
+
+
