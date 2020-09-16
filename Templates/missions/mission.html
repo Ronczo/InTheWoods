@@ -22,7 +22,7 @@
         <p class="leftmargin"> {{ character.name }} </p>
         <div id="character_details" class="leftmargin">
             <div class="progress">
-                <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_bar_hp }}%" aria-valuenow="{{ character.current_hp }}" aria-valuemin="5" aria-valuemax="{{ character.hp }}"></div>
+                <div class="progress-bar bg-success" role="progressbar" style="width: {{ progress_bar_hp }}%" aria-valuenow="{{ character.current_hp }}" aria-valuemin="0" aria-valuemax="{{ character.hp }}"></div>
             </div>{{ character.current_hp }} / {{ character.hp }} HP
             <div class="progress">
                 <div class="progress-bar bg-info" role="progressbar" style="width: {{ progress_bar_mana }}%" aria-valuenow="{{ character.current_mana }}" aria-valuemin="0" aria-valuemax="{{ character.mana }}"></div>
@@ -45,7 +45,7 @@
         <div>
             <p class="rightmargin" style="font-size: 24px; margin-right: 100px;">{{ monster.name }}</p>
                 <div class="progress" style="margin-top: 80px;">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ monster_progress_bar_hp }}%" aria-valuenow="{{ monster.current_hp }}" aria-valuemin="5" aria-valuemax="{{ monster.max_hp }}"></div>
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ monster_progress_bar_hp }}%" aria-valuenow="{{ monster.current_hp }}" aria-valuemin="0" aria-valuemax="{{ monster.max_hp }}"></div>
                 </div>
         </div>
         <p class="rightmargin">{{ monster.current_hp }} / {{ monster.max_hp }} HP</p>
@@ -53,7 +53,7 @@
         {% if monster.max_mana > 10 %}
         <!-- It's ugly, but it works... #TODO: Find way to make it better! -->
         <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" style="width: {{ monster_progress_bar_mana }}%" aria-valuenow="{{ monster.current_mana }}" aria-valuemin="5" aria-valuemax="{{ monster.max_mana }}"></div>
+            <div class="progress-bar bg-info" role="progressbar" style="width: {{ monster_progress_bar_mana }}%" aria-valuenow="{{ monster.current_mana }}" aria-valuemin="0" aria-valuemax="{{ monster.max_mana }}"></div>
         </div>
         <p class="rightmargin">{{ monster.current_mana }} / {{ monster.max_mana }} Mana</p><hr>
         {% endif %}
@@ -67,9 +67,13 @@
     <div id="actionmenu">
         <div id="actiontext">
             <div id="tothebottom">
-                TUTAJ BĘDZIE TEKST O PRZEBIEGU WALKI  {{ battle_course }}
+                {% if battle_course != None or monster_message != None %}
+                <p>{{ battle_course }}</p>
+                <p style="color: red;">{{ monster_message }}</p>
+                {% endif %}
             </div>
         </div>
+        {% if character.current_hp > 0 and monster.current_hp > 0 %}
         <div id="basicaction">
             <div id="attackbutton">
                 <form method="post">
@@ -88,9 +92,19 @@
                 </form>
             </div>
         </div>
+        <!-- special attacks -->
         <div id="specialaction">
             SPECIAL ATATCKS
         </div>
+        <!-- fight end -->
+        {% else %}
+            {% if monster.current_hp == 0 %}
+                Wygrałeś
+            {% endif %}
+            {% if character.current_hp == 0 %}
+                Przegrałeś
+            {% endif %}
+        {% endif %}
     </div>
 </div>
 

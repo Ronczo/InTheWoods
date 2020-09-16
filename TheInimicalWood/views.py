@@ -272,9 +272,8 @@ def briefing(request, id, selected_mission):
 
 def mission(request,id, selected_mission):
     """
-    Fighting mechanics and info about character and monster
+    Fighting mechanics, info about character and monster
     """
-
 
     character = get_object_or_404(Character, pk=id)
     current_mission = get_object_or_404(Mission, number=selected_mission)
@@ -297,16 +296,25 @@ def mission(request,id, selected_mission):
     monster.current_mana / monster.max_mana * 100) >= 25 else 25
 
 
-    #attach action
+    #Player's moves
     if 'attack' in request.POST:
-        monster.current_hp -= 1
-        combat.Attacks.basic_attack(id, selected_mission)
+        request.session['battle_route'] = combat.Attacks.basic_attack(id, selected_mission)
+        request.session['monster_message'] = combat.monster_attack(id, selected_mission)
         return redirect('mission', id=character.id, selected_mission=selected_mission)
+
 
     if 'defend' in request.POST:
-        combat.Defends.defend(id)
+        request.session['battle_route'] = combat.Defends.defend(id)
+        request.session['monster_message'] = combat.monster_attack(id, selected_mission)
         return redirect('mission', id=character.id, selected_mission=selected_mission)
 
+    #Shows what happened previously on battlefield
+    sessions = ['battle_route', 'monster_message']
+    if any(ses in request.session for ses in sessions):
+        battle_course = request.session['battle_route']
+        monster_message = request.session['monster_message']
+    else:
+        battle_course, monster_message = None, None
 
 
     context = {
@@ -319,6 +327,8 @@ def mission(request,id, selected_mission):
         'monster': monster,
         'monster_progress_bar_hp': monster_progress_bar_hp,
         'monster_progress_bar_mana': monster_progress_bar_mana,
+        'battle_course': battle_course,
+        'monster_message': monster_message
     }
 
     return render(request, 'missions/mission.html', context)
