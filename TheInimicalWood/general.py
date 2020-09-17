@@ -39,13 +39,15 @@ def create_character_logic(hero):
 
     # starting statistics for everyclass
     if hero.hero_class == 0:
-        pass
+        hero.special_attack_pic = 'http://www.ronczo.webd.pro/media/warrior_special.jpg'
     elif hero.hero_class == 1:
+        hero.special_attack_pic = 'http://www.ronczo.webd.pro/media/archer_special.jpg'
         hero.attack_dmg = 15
         hero.defence = 5
         hero.stamina = 150
         hero.current_stamina = 150
     elif hero.hero_class == 2:
+        hero.special_attack_pic = 'http://www.ronczo.webd.pro/media/mage_special.jpg'
         hero.attack_dmg = 5
         hero.defence = 5
         hero.mana = 100

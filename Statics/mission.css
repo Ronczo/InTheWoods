@@ -143,6 +143,7 @@
     background-color: black;
     border-radius: 25px;
     padding: 15px;
+    font-family: 'Londrina Solid', cursive;
 }
 
 #tothebottom {
@@ -151,3 +152,85 @@
     padding: 10px;
 }
 
+#specialaction {
+    position: relative;
+    height: 330px;
+}
+
+#specialattackbox {
+    position: absolute;
+    margin: 4% 40%;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 30px;
+    text-align: center;
+    width: 300px;
+}
+
+#special {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 30px;
+    text-align: left;
+    margin-left: 15px;
+
+}
+
+#specialattack {
+    border: solid 3px;
+    border-color: #448aa2;
+    float: left;
+    margin-right: 20px;
+}
+
+#special_description{
+    font-size: 16px;
+    text-align: left;
+    font-family: 'Belleza', sans-serif;
+    margin-top: 25px;
+
+}
+
+.tothebottom {
+    position: absolute;
+    bottom: 0;
+}
+
+#wonbutton {
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 40%;
+    text-align: center;
+    margin-right: 10px;
+    background-color: green;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 24px;
+    margin: auto;
+}
+#won {
+    border: solid 0px;
+    background-color: green;
+    color: white;
+}
+
+#lostbutton {
+    padding: 10px 20px;
+    border-radius: 10px;
+    width: 40%;
+    text-align: center;
+    margin-right: 10px;
+    background-color: #c9c749;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 24px;
+    margin: auto;
+}
+#lost {
+    border: solid 0px;
+    background-color: #c9c749;
+    color: white;
+}
+
+.endfight {
+    color: #db2a68;
+    text-align: center;
+    font-family: 'Belleza', sans-serif;
+    font-size: 44px;
+}

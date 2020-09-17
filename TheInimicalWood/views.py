@@ -34,12 +34,9 @@ class Overview(View):
 
         # Variables needed for template
         loop_index_raw = [i for i in range(1000)][1::3]
-        progress_bar_hp = int(character.current_hp / character.hp * 100) if (
-                                                                                    character.current_hp / character.hp * 100) >= 25 else 25
-        progress_bar_mana = int(character.current_mana / character.mana * 100) if (
-                                                                                          character.current_mana / character.mana * 100) >= 25 else 25
-        progress_bar_stamina = int(character.current_stamina / character.stamina * 100) if (
-                                                                                                   character.current_stamina / character.stamina * 100) >= 25 else 25
+        progress_bar_hp = int(character.current_hp / character.hp * 100)
+        progress_bar_mana = int(character.current_mana / character.mana * 100)
+        progress_bar_stamina = int(character.current_stamina / character.stamina * 100)
 
         context = {
             'character': character,
@@ -132,6 +129,79 @@ class Shop(View):
             return redirect('shop', id=character.id)
 
         return render(request, 'shop.html')
+
+
+class Combat(View):
+    """
+    Fighting mechanics, info about character and monster
+    """
+
+    @staticmethod
+    def get(request, id, selected_mission):
+
+        character = get_object_or_404(Character, pk=id)
+        current_mission = get_object_or_404(Mission, number=selected_mission)
+        monster = get_object_or_404(Monsters, number=selected_mission)
+
+        # Variables needed for template
+        progress_bar_hp = int(character.current_hp / character.hp * 100)
+        progress_bar_mana = int(character.current_mana / character.mana * 100)
+        progress_bar_stamina = int(character.current_stamina / character.stamina * 100)
+
+        # Variables for info about monster
+        monster_progress_bar_hp = int(monster.current_hp / monster.max_hp * 100)
+        monster_progress_bar_mana = int(monster.current_mana / monster.max_mana * 100)
+
+        battle_course = request.session['battle_route']
+        monster_message = request.session['monster_message']
+        request.session['battle_route'] = f'The battle is going to start soon. {character.name} is preparing weapon.'
+        request.session['monster_message'] = None
+
+        context = {
+            'character': character,
+            'current_mission': current_mission,
+            'progress_bar_hp': progress_bar_hp,
+            'progress_bar_mana': progress_bar_mana,
+            'progress_bar_stamina': progress_bar_stamina,
+            'mission_number': selected_mission,
+            'monster': monster,
+            'monster_progress_bar_hp': monster_progress_bar_hp,
+            'monster_progress_bar_mana': monster_progress_bar_mana,
+            'battle_course': battle_course,
+            'monster_message': monster_message
+        }
+
+        return render(request, 'missions/mission.html', context)
+
+    @staticmethod
+    def post(request, id, selected_mission):
+        character = get_object_or_404(Character, pk=id)
+
+        # Player's moves
+        if 'attack' in request.POST:
+            request.session['battle_route'] = combat.Attacks.basic_attack(id, selected_mission, special=1)
+            request.session['monster_message'] = combat.monster_attack(id, selected_mission)
+            return redirect('mission', id=character.id, selected_mission=selected_mission)
+
+        if 'defend' in request.POST:
+            request.session['battle_route'] = combat.Defends.defend(id)
+            request.session['monster_message'] = combat.monster_attack(id, selected_mission)
+            return redirect('mission', id=character.id, selected_mission=selected_mission)
+
+        if 'special' in request.POST:
+            request.session['battle_route'] = combat.Attacks.basic_attack(id, selected_mission, special=3)
+            request.session['monster_message'] = combat.monster_attack(id, selected_mission)
+            return redirect('mission', id=character.id, selected_mission=selected_mission)
+
+        if 'won' in request.POST:
+            combat.fight_end(id, selected_mission)
+            character.mission += 1
+            character.save()
+            return redirect('mission_select', id=character.id)
+
+        if 'lost' in request.POST:
+            combat.fight_end(id, selected_mission)
+            return redirect('mission_select', id=character.id)
 
 
 def home(request):
@@ -268,57 +338,3 @@ def briefing(request, id, selected_mission):
     }
 
     return render(request, 'missions/briefing-template.html', context)
-
-
-def mission(request, id, selected_mission):
-    """
-    Fighting mechanics, info about character and monster
-    """
-
-    character = get_object_or_404(Character, pk=id)
-    current_mission = get_object_or_404(Mission, number=selected_mission)
-    monster = get_object_or_404(Monsters, number=selected_mission)
-
-    # Variables needed for template
-    progress_bar_hp = int(character.current_hp / character.hp * 100)
-    progress_bar_mana = int(character.current_mana / character.mana * 100)
-    progress_bar_stamina = int(character.current_stamina / character.stamina * 100)
-
-    # Variables for info about monster
-    monster_progress_bar_hp = int(monster.current_hp / monster.max_hp * 100)
-    monster_progress_bar_mana = int(monster.current_mana / monster.max_mana * 100)
-
-    # Player's moves
-    if 'attack' in request.POST:
-        request.session['battle_route'] = combat.Attacks.basic_attack(id, selected_mission)
-        request.session['monster_message'] = combat.monster_attack(id, selected_mission)
-        return redirect('mission', id=character.id, selected_mission=selected_mission)
-
-    if 'defend' in request.POST:
-        request.session['battle_route'] = combat.Defends.defend(id)
-        request.session['monster_message'] = combat.monster_attack(id, selected_mission)
-        return redirect('mission', id=character.id, selected_mission=selected_mission)
-
-    # Shows what happened previously on battlefield
-    sessions = ['battle_route', 'monster_message']
-    if any(ses in request.session for ses in sessions):
-        battle_course = request.session['battle_route']
-        monster_message = request.session['monster_message']
-    else:
-        battle_course, monster_message = None, None
-
-    context = {
-        'character': character,
-        'current_mission': current_mission,
-        'progress_bar_hp': progress_bar_hp,
-        'progress_bar_mana': progress_bar_mana,
-        'progress_bar_stamina': progress_bar_stamina,
-        'mission_number': selected_mission,
-        'monster': monster,
-        'monster_progress_bar_hp': monster_progress_bar_hp,
-        'monster_progress_bar_mana': monster_progress_bar_mana,
-        'battle_course': battle_course,
-        'monster_message': monster_message
-    }
-
-    return render(request, 'missions/mission.html', context)

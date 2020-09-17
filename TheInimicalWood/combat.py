@@ -10,7 +10,7 @@ class Attacks:
     """
 
     @staticmethod
-    def basic_attack(id, selected_mission):
+    def basic_attack(id, selected_mission, special):
         """
         basic attack
         """
@@ -19,21 +19,31 @@ class Attacks:
 
         miss_chance = round(randint(0, 100))
         dmg_factor = round(randint(0, 100))
-        hit_dmg = character.attack_dmg + dmg_factor / 10 - monster.defence / 2
+        hit_dmg = (character.attack_dmg + dmg_factor / 10 - monster.defence / 2)
         hit_dmg = 1 if hit_dmg < 0 else hit_dmg
 
+        no_mana_message = ""
         if character.current_stamina >= 10:
             character.current_stamina -= 10
+            if special == 3:
+                if character.current_mana >= 35:
+                    character.current_mana -= 35
+                else:
+                    special = 1
+                    no_mana_message = " (You don't have enough mana for special attack)"
+
             if miss_chance > 10:
-                message = f"{character.name} attacked {monster.name} by \"bassic attack\" for {int(round(hit_dmg, 0))}"
+                message = f"{character.name} attacked {monster.name} by \"basic attack\" for " \
+                          f"{int(round(hit_dmg * special, 0))}"
+                message += ' (Special attack)' if special == 3 else no_mana_message if character.current_mana < 35 else ""
                 if dmg_factor > 85:
-                    hit_dmg * 2
+                    hit_dmg * 1.5
                     message += " (Critical)"
-                monster.current_hp -= round(hit_dmg, 0)
+                monster.current_hp -= round(hit_dmg * special, 0)
             else:
                 message = f"{character.name} misses!"
         else:
-            message = f"{character.name} doesn't have enough stamina!!"
+            message = f"{character.name} doesn't have enough stamina!!! Use \"defend\"."
 
         if monster.current_hp < 0:
             monster.current_hp = 0
@@ -46,7 +56,7 @@ class Attacks:
 
 class Defends:
     """
-    Heals your character
+    Heals your character, restores mana and stamina
     """
 
     @staticmethod
@@ -61,10 +71,14 @@ class Defends:
         if character.stamina - character.current_stamina < 20:
             character.current_stamina += character.stamina - character.current_stamina
         else:
-            character.current_stamina += 20
+            character.current_stamina += 10
+        if character.mana - character.current_mana < 10:
+            character.current_mana += character.mana - character.current_mana
+        else:
+            character.current_mana += 10
 
         character.save()
-        return f"{character.name} rests, heals 10 hp and restores 20 stamina"
+        return f"{character.name} rests, heals 10 hp, restores 20 stamina and 10 mana"
 
 
 def monster_attack(id, selected_mission):
@@ -80,7 +94,6 @@ def monster_attack(id, selected_mission):
     monster_hit_dmg = monster.attack_dmg + monster_dmg_factor / 10 - character.defence / 2
     monster_hit_dmg = 1 if monster_hit_dmg < 0 else monster_hit_dmg
 
-
     if monster_miss_chance > 20:
         monster_message = f"{monster.name} attacked {character.name} for {int(round(monster_hit_dmg, 0))}"
         if monster_dmg_factor > 85:
@@ -90,8 +103,8 @@ def monster_attack(id, selected_mission):
     else:
         monster_message = f"{monster.name} misses!"
 
-    if monster.current_hp < 0:
-        monster.current_hp = 0
+    if character.current_hp < 0:
+        character.current_hp = 0
 
     character.save()
     monster.save()
@@ -109,8 +122,6 @@ def fight_end(id, selected_mission):
 
     monster.current_hp = monster.max_hp
     monster.current_mana = monster.max_mana
-
-    character.mission = selected_mission
 
     character.save()
     monster.save()

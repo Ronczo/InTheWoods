@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Mission {{ current_mission.number }} -    {% endblock %}
+{% block title %}Mission {{ current_mission.number }} {% endblock %}
 
 {% block content %}
 {% if character.belongs_to == request.user %}
@@ -57,7 +57,6 @@
         </div>
         <p class="rightmargin">{{ monster.current_mana }} / {{ monster.max_mana }} Mana</p><hr>
         {% endif %}
-
         <p class="rightmargin"><i class="fas fa-fire"></i> Attack damage: {{ monster.attack_dmg }}</p><hr>
         <p class="rightmargin"><i class="fas fa-shield-alt"></i> Defence: {{ monster.defence }}</p><hr>
         <p class="rightmargin"><i class="fas fa-bomb"></i> Cricital chance: {{ monster.critical_chance }}%</p><hr>
@@ -67,9 +66,11 @@
     <div id="actionmenu">
         <div id="actiontext">
             <div id="tothebottom">
-                {% if battle_course != None or monster_message != None %}
-                <p>{{ battle_course }}</p>
-                <p style="color: red;">{{ monster_message }}</p>
+                {% if battle_course != None %}
+                    <p>{{ battle_course }}</p>
+                {% endif %}
+                {% if monster_message != None %}
+                    <p style="color: red;">{{ monster_message }}</p>
                 {% endif %}
             </div>
         </div>
@@ -78,7 +79,7 @@
             <div id="attackbutton">
                 <form method="post">
                 {% csrf_token %}
-                    <button type="submit" name="attack" value="1" id="attack">
+                    <button type="submit" name="attack" id="attack">
                         ATTACK
                     </button>
                 </form>
@@ -86,7 +87,7 @@
             <div id="defendbutton">
                 <form method="post">
                 {% csrf_token %}
-                    <button type="submit" name="defend" value="1" id="defend">
+                    <button type="submit" name="defend" id="defend">
                         DEFEND
                     </button>
                 </form>
@@ -94,15 +95,49 @@
         </div>
         <!-- special attacks -->
         <div id="specialaction">
-            SPECIAL ATATCKS
+            <div id="specialattackbox">
+                <div id="special">Special</div>
+                    <form method="post">
+                    {% csrf_token %}
+                        <button type="submit" name="special" id="specialattack">
+                            <img src="{{ character.special_attack_pic }}">
+                        </button>
+                    </form>
+                <p id="special_description">
+                    <i class="fas fa-exclamation"></i> Uses 35 mana<br>
+                    <i class="fas fa-exclamation"></i> Deals 3x damage<br>
+                    <i class="fas fa-exclamation"></i> It's awesome!<br>
+            </div>
+            <!-- information for player -->
+            <p class="tothebottom">
+                <i class="far fa-lightbulb"></i> After every action the monster tries to attack you.<br>
+                <i class="far fa-lightbulb"></i> Try to not refresh the page.
+            </p>
         </div>
+
         <!-- fight end -->
         {% else %}
             {% if monster.current_hp == 0 %}
-                Wygrałeś
+            <p class="endfight"> You won!</p>
+            <div id="wonbutton">
+                <form method="post">
+                {% csrf_token %}
+                    <button type="submit" name="won" id="won">
+                        AWESOME
+                    </button>
+                </form>
+            </div>
             {% endif %}
             {% if character.current_hp == 0 %}
-                Przegrałeś
+            <p class="endfight"> You lost!</p>
+            <div id="lostbutton">
+                <form method="post">
+                {% csrf_token %}
+                    <button type="submit" name="lost" id="lost">
+                        Try again
+                    </button>
+                </form>
+            </div>
             {% endif %}
         {% endif %}
     </div>

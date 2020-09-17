@@ -26,6 +26,7 @@ class Character(models.Model):
     current_stamina = models.PositiveSmallIntegerField(blank=False, null=False, default=100)
     mission = models.PositiveSmallIntegerField(blank=False, null=False, default=0)  # Last finished mission
     critical_chance = models.PositiveSmallIntegerField(blank=False, null=False, default=20)
+    special_attack_pic = models.URLField(unique=False, blank=True, null=True)
 
     def __str__(self):
         return f"""NAME: {self.name}
