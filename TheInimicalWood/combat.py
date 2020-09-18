@@ -124,6 +124,9 @@ def monster_attack(id, selected_mission):
 
 
 def fight_end(id, selected_mission):
+    """
+    Heal hero and monster
+    """
     character = get_object_or_404(Character, pk=id)
     monster = get_object_or_404(Monsters, number=selected_mission)
 
@@ -132,7 +135,6 @@ def fight_end(id, selected_mission):
     character.current_stamina = character.stamina
 
     monster.current_hp = monster.max_hp
-    monster.current_mana = monster.max_mana
 
     character.save()
     monster.save()

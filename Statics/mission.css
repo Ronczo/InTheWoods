@@ -242,37 +242,41 @@
 }
 
 #wonbutton {
-    padding: 10px 20px;
+    padding: 5px 5px;
     border-radius: 10px;
-    width: 40%;
+    width: 30%;
     text-align: center;
     margin-right: 10px;
     background-color: green;
     font-family: 'Luckiest Guy', cursive;
     font-size: 24px;
     margin: auto;
+    height: 60px;
 }
 #won {
     border: solid 0px;
     background-color: green;
     color: white;
+    margin-top: 5px;
 }
 
 #lostbutton {
-    padding: 10px 20px;
+    padding: 5px 5px;
     border-radius: 10px;
-    width: 40%;
+    width: 30%;
     text-align: center;
     margin-right: 10px;
     background-color: #c9c749;
     font-family: 'Luckiest Guy', cursive;
     font-size: 24px;
     margin: auto;
+    height: 60px;
 }
 #lost {
     border: solid 0px;
     background-color: #c9c749;
     color: white;
+    margin-top: 5px;
 }
 
 .endfight {

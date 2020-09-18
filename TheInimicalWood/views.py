@@ -151,7 +151,6 @@ class Combat(View):
 
         # Variables for info about monster
         monster_progress_bar_hp = int(monster.current_hp / monster.max_hp * 100)
-        monster_progress_bar_mana = int(monster.current_mana / monster.max_mana * 100)
 
         battle_course = request.session['battle_route']
         monster_message = request.session['monster_message']
@@ -176,7 +175,6 @@ class Combat(View):
             'mission_number': selected_mission,
             'monster': monster,
             'monster_progress_bar_hp': monster_progress_bar_hp,
-            'monster_progress_bar_mana': monster_progress_bar_mana,
             'battle_course': battle_course,
             'monster_message': monster_message,
             'backpack': backpack

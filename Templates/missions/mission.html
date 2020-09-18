@@ -7,14 +7,25 @@
 <div id="mission_number">
     Mission {{ current_mission.number }}
 </div>
-<div >
-    <a href="{% url 'mission_select' character.id %}" class="btn btn-danger" id="back">BACK</a>
+<div id="back">
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" name="lost" id="backbutton">
+            BACK
+        </button>
+    </form>
 </div>
 <div id="container">
     <!-- HERO STATUS SECTION-->
     <div id="herostatus">
         <div id="avatar">
-            <img src="{{ character.avatar }}"  alt="avatar" height="80" width="80">
+            {% if character.hero_class == 0 %}
+            <img src="http://www.ronczo.webd.pro/media/Knight_avatar.jpg"  alt="Knight_avatar" height="80" width="80">
+            {% elif character.hero_class == 1 %}
+            <img src="http://www.ronczo.webd.pro/media/Archer_avatar.jpg"  alt="Archer_avatar" height="80" width="80">
+            {% else %}
+            <img src="http://www.ronczo.webd.pro/media/Sorcerer_avatar.jpg"  alt="Sorcerer_avatar" height="80" width="80">
+            {% endif %}
         </div>
         <p class="leftmargin"> {{ character.name }} </p>
         <div id="character_details" class="leftmargin">
@@ -70,10 +81,7 @@
 
         {% if monster.max_mana > 10 %}
         <!-- It's ugly, but it works... #TODO: Find way to make it better! -->
-        <div class="progress">
-            <div class="progress-bar bg-info" role="progressbar" style="width: {{ monster_progress_bar_mana }}%" aria-valuenow="{{ monster.current_mana }}" aria-valuemin="0" aria-valuemax="{{ monster.max_mana }}"></div>
-        </div>
-        <p class="rightmargin">{{ monster.current_mana }} / {{ monster.max_mana }} Mana</p><hr>
+        <hr>
         {% endif %}
         <p class="rightmargin"><i class="fas fa-fire"></i> Attack damage: {{ monster.attack_dmg }}</p><hr>
         <p class="rightmargin"><i class="fas fa-shield-alt"></i> Defence: {{ monster.defence }}</p><hr>
