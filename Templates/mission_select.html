@@ -12,18 +12,23 @@
               <div class="row">
               {% for mission in missions %}
                   <div class="col-4" style="margin-top: 7px">Mission {{ mission.number }}
-                    <a href="{% url 'briefing' id=character.id selected_mission=mission.number %}">
-
-                      <img src="{{ mission.picture }}" alt="NO PIC!" title="{{ mission.description }}"
-                               width="216"  height=134" style="border: 3px solid #9ec8d6;">
-                      {% if character.mission >= mission.number %}
-                      <div style="position: absolute;
-                        bottom: 3px;
-                        width: 50%;
-                        color: white;"><center><i class="fas fa-check-circle fa-3x"></i></center>
-                      </div>
-                      {% endif %}
-                     </a>
+                        {% if next_mission >= mission.number %}
+                        <a href="{% url 'briefing' id=character.id selected_mission=mission.number %}">
+                        {% endif %}
+                            <img src="{{ mission.picture }}" alt="NO PIC!" title="{{ mission.description }}"
+                                   width="216"  height=134" style="border: 3px solid #9ec8d6;
+                              {% if next_mission < mission.number %}
+                                opacity: 0.6;
+                              {% endif %}
+                             ">
+                            {% if character.mission >= mission.number %}
+                                <div style="position: absolute;
+                                    bottom: 3px;
+                                    width: 50%;
+                                    color: white;"><center><i class="fas fa-check-circle fa-3x"></i></center>
+                                </div>
+                            {% endif %}
+                        </a>
                 </div>
               {% endfor %}
             </div>

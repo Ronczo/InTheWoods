@@ -76,6 +76,7 @@ class Mission(models.Model):
     picture = models.URLField(unique=True, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     story = models.TextField(blank=True, null=True)
+    gold = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
 
     def __str__(self):
         return f"{self.number} - {self.description}"
@@ -93,6 +94,7 @@ class Monsters(models.Model):
     attack_dmg = models.PositiveSmallIntegerField(blank=False, null=False, default=10)
     defence = models.PositiveSmallIntegerField(blank=False, null=False, default=10)
     critical_chance = models.PositiveSmallIntegerField(blank=False, null=False, default=0)
+
 
     def __str__(self):
         return f"{self.name} - {self.description}"

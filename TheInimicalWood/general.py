@@ -54,9 +54,6 @@ def create_character_logic(hero):
         hero.current_mana = 100
     hero.save()
 
-    # for item in items:
-    #     item.belongs_to_hero.add(hero)
-
 
 def contact_logic(user_name, user_mail, user_subject, mail_body, account):
     """
@@ -82,6 +79,7 @@ def contact_logic(user_name, user_mail, user_subject, mail_body, account):
     server.login(user, password)
     server.sendmail(user_mail, mail_to, message.encode('utf-8'))
     server.close()
+
 
 
 class Overview:
@@ -134,20 +132,31 @@ class Overview:
             character.stamina += item_to_equip.bonus_stamina
 
             # potions
-            if character.hp > item_to_equip.bonus_hp + character.current_hp:
-                character.current_hp += item_to_equip.bonus_current_hp
-            else:
-                character.current_hp += (character.hp - character.current_hp)
-            if character.mana > item_to_equip.bonus_mana + character.current_mana:
-                character.current_mana += item_to_equip.bonus_current_mana
-            else:
-                character.current_mana += (character.mana - character.current_mana)
-            if character.stamina > item_to_equip.bonus_stamina + character.current_stamina:
-                character.current_stamina += item_to_equip.bonus_current_stamina
-            else:
-                character.current_stamina += (character.stamina - character.current_stamina)
+            character.current_hp += item_to_equip.bonus_current_hp
+            if character.current_hp > character.hp:
+                character.current_hp = character.hp
+
+            character.current_mana += item_to_equip.bonus_current_mana
+            if character.current_mana > character.mana:
+                character.current_mana = character.mana
+
+            character.current_stamina += item_to_equip.bonus_current_stamina
+            if character.current_stamina > character.stamina:
+                character.current_stamina = character.stamina
 
             character.save()
+
+            if item_to_equip.bonus_current_hp > 0:
+                message = f"You restores {item_to_equip.bonus_current_hp} HP"
+            elif item_to_equip.bonus_current_mana > 0:
+                message = f"You restores {item_to_equip.bonus_current_mana} mana"
+            elif item_to_equip.bonus_current_stamina > 0:
+                message = f"You restores {item_to_equip.bonus_current_stamina} stamina"
+            else:
+                message = ""
+
+
+            return message
 
     @staticmethod
     def take_off_item(request, character, hero_backpack, hero_inventory):

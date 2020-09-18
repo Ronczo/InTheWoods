@@ -7,6 +7,15 @@
 <div id="mission_number">
     Mission {{ current_mission.number }}
 </div>
+<div id="back">
+    <form method="post">
+        {% csrf_token %}
+    <button type="submit" name="lost" id="backbutton">
+        BACK
+    </button>
+    </form>
+
+</div>
 <div id="container">
     <!-- HERO STATUS SECTION-->
     <div id="herostatus">
@@ -38,12 +47,33 @@
             <p><i class="fas fa-running"></i> Max stamina: {{ character.stamina }}</p>
             <p><i class="fas fa-bomb"></i> Cricital chance: {{ character.critical_chance }}%</p>
         </div>
+    <!-- Backpack -->
+    </div>
+    <div id="backpack">
+        <div id="backpack_details" >
+            Backpack
+            {% for item, quantity in backpack.items %}
+                {% if item.category == 7 or item.category == 0 %}
+                    <img src="{{ item.picture }}" alt="NO PIC!" title="{{ item.description }}" height="64" width="64" class="item_pic">
+                      <div class="pic_quantity">{{ quantity }}</div>
+                            <form method="post">
+                                {% csrf_token %}
+                                {% if item.name != "Arrows" %}
+                                    <button type="submit" class="badge badge-info"  style="height: 20px; width: 4rem; font-family: 'News Cycle', sans-serif;"
+                                      name="equip" value="{{ item.name }}">Use</button>
+                                {% else %}
+                                    <br>
+                                {% endif %}
+                            </form>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
     <!-- MONSTER STATUS SECTION -->
     <div id="monsterstatus">
-        <img src="{{ monster.picture }}"  alt="Knight_avatar" height="100" width="80" style="border: solid 3px; float: right;">
+        <img src="{{ monster.picture }}"  alt="Knight_avatar" height="100" width="100" style="border: solid 3px; float: right;">
         <div>
-            <p class="rightmargin" style="font-size: 24px; margin-right: 100px;">{{ monster.name }}</p>
+            <p class="rightmargin" style="font-size: 24px; margin-right: 110px;">{{ monster.name }}</p>
                 <div class="progress" style="margin-top: 80px;">
                     <div class="progress-bar bg-success" role="progressbar" style="width: {{ monster_progress_bar_hp }}%" aria-valuenow="{{ monster.current_hp }}" aria-valuemin="0" aria-valuemax="{{ monster.max_hp }}"></div>
                 </div>

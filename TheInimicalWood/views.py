@@ -157,6 +157,15 @@ class Combat(View):
         request.session['battle_route'] = f'The battle is going to start soon. {character.name} is preparing weapon.'
         request.session['monster_message'] = None
 
+        hero_backpack = json.loads(character.backpack)
+
+        # Creating backpack from JSON string
+        backpack = {}
+        for item in hero_backpack:
+            if hero_backpack[item] > 0:
+                item_to_add = get_object_or_404(Item, name=item)
+                backpack[item_to_add] = hero_backpack[item]
+
         context = {
             'character': character,
             'current_mission': current_mission,
@@ -168,7 +177,8 @@ class Combat(View):
             'monster_progress_bar_hp': monster_progress_bar_hp,
             'monster_progress_bar_mana': monster_progress_bar_mana,
             'battle_course': battle_course,
-            'monster_message': monster_message
+            'monster_message': monster_message,
+            'backpack': backpack
         }
 
         return render(request, 'missions/mission.html', context)
@@ -176,6 +186,9 @@ class Combat(View):
     @staticmethod
     def post(request, id, selected_mission):
         character = get_object_or_404(Character, pk=id)
+        current_mission = get_object_or_404(Mission, number=selected_mission)
+        hero_backpack = json.loads(character.backpack)
+        hero_inventory = json.loads(character.inventory)
 
         # Player's moves
         if 'attack' in request.POST:
@@ -195,13 +208,20 @@ class Combat(View):
 
         if 'won' in request.POST:
             combat.fight_end(id, selected_mission)
-            character.mission += 1
+            character.mission = current_mission.number
+            character.money += current_mission.gold
             character.save()
             return redirect('mission_select', id=character.id)
 
         if 'lost' in request.POST:
             combat.fight_end(id, selected_mission)
             return redirect('mission_select', id=character.id)
+
+        if 'equip' in request.POST:
+            request.session['battle_route'] = general.Overview.equip_item(request, character, hero_backpack, hero_inventory)
+            return redirect('mission', id=character.id, selected_mission=selected_mission)
+
+
 
 
 def home(request):
@@ -315,10 +335,12 @@ def mission_select(request, id):
     """
     character = get_object_or_404(Character, pk=id)
     missions = Mission.objects.all()
+    next_mission = character.mission + 1
 
     context = {
         'character': character,
-        'missions': missions
+        'missions': missions,
+        'next_mission': next_mission
     }
 
     return render(request, 'mission_select.html', context)
