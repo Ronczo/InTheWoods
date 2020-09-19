@@ -25,7 +25,7 @@ SECRET_KEY = '&%(9*fyg(g5tv*aiwzg^p00d(d&p5^#lecgx#4np^75%27-k43'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['ronczo.pythonanywhere.com', '127.0.0.1']
 
 
 # Application definition
@@ -56,7 +56,7 @@ ROOT_URLCONF = 'InimicalWood.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['Templates'],
+        'DIRS': ['InTheWoods/Templates', 'Templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -121,6 +121,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = ['Statics']
+STATIC_ROOT = '/home/Ronczo/InTheWoods/static'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = 'Media'
