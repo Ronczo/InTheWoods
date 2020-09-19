@@ -147,7 +147,7 @@
 
 #attackbutton {
     float: left;
-    padding: 10px 20px;
+    padding: 5px 5px;
     border-radius: 10px;
     width: 40%;
     text-align: center;
@@ -155,6 +155,7 @@
     background-color: red;
     font-family: 'Luckiest Guy', cursive;
     font-size: 22px;
+    height: 50px;
 
 }
 #attack{
@@ -165,13 +166,14 @@
 
 #defendbutton {
     margin-left: 60%;
-    padding: 10px 20px;
+    padding: 5px 5px;
     border-radius: 10px;
     width: 40%;
     text-align: center;
     background-color: blue;
     font-family: 'Luckiest Guy', cursive;
     font-size: 22px;
+    height: 50px;
 }
 #defend{
     border: solid 0px;
