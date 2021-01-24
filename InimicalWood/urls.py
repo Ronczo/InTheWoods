@@ -24,6 +24,7 @@ from TheInimicalWood.views import signup, aboutme, contact
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('TheInimicalWood.urls'), name='game'),
+    path('library/', include('Library.urls'), name='library'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('accounts/signup/', signup, name='signup'),
     path('aboutme/', aboutme, name='aboutme'),

@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bootstrapform',
     'TheInimicalWood',
+    'Library',
+    'django_filters'
 ]
 
 MIDDLEWARE = [

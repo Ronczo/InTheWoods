@@ -1,0 +1,19 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Main Menu{% endblock %}
+{% block content %}
+<a href="{% url 'main' %}">Cofnij</a><br>
+<h3>Podaj wyszukiwaną frazę (fraza będzie szukana w tytułach oraz autorach książek):</h3>
+<form aciton="{% url 'searchbar' %}" method="get">
+    <input type="text" name="searching" placeholder="Szukaj...."><br>
+    <button type="submit">Szukaj</button>
+
+{% for book in result %}
+    <p>-----------------------------------------------------</p>
+    <p><b>Książka, nr ideksu: {{ book.id }}</b></p>
+    <p><b>Tytuł:</b> {{ book.title }}</p>
+    <p><b>Autor:</b> {{ book.author }}</p>
+    <p><b>Data premiery:</b> {{ book.year_of_release }}</p>
+    <p><a href="{% url 'edit_book' book.id %}">Szczegóły / Edytuj </a></p>
+{% endfor %}
+</form>
+{% endblock %}

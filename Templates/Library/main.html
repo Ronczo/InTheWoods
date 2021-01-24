@@ -1,0 +1,19 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Main Menu{% endblock %}
+{% block content %}
+<div>
+    <a href="{% url 'new_book' %}">Dodaj książkę</a><br>
+    <a href="{% url 'sorted_books' %}">Posortuj książki ze względu na średnią ocenę</a><br>
+    <a href="{% url 'often_rated' %}">Posortuj książki ze względu na ilość ocen</a><br>
+    <a href="{% url 'search' %}">Znajdź ksiązkę</a><br>
+    <h4>Lista wszystkich ksiażek dostępnych w bibliotece:</h4>
+    {% for book in books %}
+        <p>-----------------------------------------------------</p>
+        <p><b>Książka, nr ideksu: {{ book.id }}</b></p>
+        <p><b>Tytuł:</b> {{ book.title }}</p>
+        <p><b>Autor:</b> {{ book.author }}</p>
+        <p><b>Data premiery:</b> {{ book.year_of_release }}</p>
+        <p><a href="{% url 'edit_book' book.id %}">Szczegóły / Edytuj </a></p>
+    {% endfor %}
+</div>
+{% endblock %}

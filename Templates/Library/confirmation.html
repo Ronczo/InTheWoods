@@ -1,0 +1,13 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Delete book{% endblock %}
+
+{% block content %}
+
+<h5 class="card-title">Na pewno chcesz usunąć {{ book.title }} z bazy danych?</h5>
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit">Usuń</button>
+  </form>
+<a href="{% url 'main' %}">Cofnij</a>
+
+{% endblock %}

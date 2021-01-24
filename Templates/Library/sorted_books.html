@@ -1,0 +1,16 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Main Menu{% endblock %}
+{% block content %}
+<a href="{% url 'main' %}">Cofnij</a><br>
+<h2>Lista książek uszeregowane według ocen:</h2>
+{% for book in books %}
+    <p>-----------------------------------------------------</p>
+    <p><b>Książka, nr ideksu: {{ book.id }}</b></p>
+    <p><b>Tytuł:</b> {{ book.title }}</p>
+    <p><b>Autor:</b> {{ book.author }}</p>
+    <p><b>Data premiery:</b> {{ book.year_of_release }}</p>
+    <p><b>Średnia ocena: {{ book.get_average_rate }}</b></p>
+    <p><b>Liczba ocen: {{ book.get_amount_rates }}</b></p>
+{% endfor %}
+
+{% endblock %}

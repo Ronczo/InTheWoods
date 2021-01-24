@@ -1,0 +1,12 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Main Menu{% endblock %}
+{% block content %}
+<h2>Oceń książkę {{ book.title }}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ rate_form }}
+            <button type="submit">Oceń książkę</button>
+</form>
+<p><a href="{% url 'edit_book' book.id %}">Cofnij </a></p>
+{% endblock %}
+

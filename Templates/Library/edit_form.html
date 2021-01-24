@@ -1,0 +1,16 @@
+{% extends 'Library/Library_template.html' %}
+{% block  title %}Main Menu{% endblock %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ book_form }}
+            <button type="submit">Edytuj książkę</button>
+</form>
+<h3>Dotychczasowa średnia ocen książki "{{ book.title }}":</h3>
+<h4><b>{{ average_rate }}</b> / 5.00</h4>
+<p><a href="{% url 'rate_book' book.id %}"> Oceń książkę</a></p>
+<br>
+<p><a href="{% url 'delete_book' book.id %}">Usuń książkę z bazy danych</a></p>
+<br>
+<p><a href="{% url 'main' %}"> Cofnij</a></p>
+{% endblock %}
